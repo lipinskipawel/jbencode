@@ -64,4 +64,24 @@ class BencodeTest implements WithAssertions {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Bencode protocol format does not allows leading zeros like [%s]".formatted(msg));
     }
+
+    private static Stream<Arguments> lists() {
+        return Stream.of(
+                arguments("l4:spam4:eggse", "['spam', 'eggs']"),
+                arguments("li3e2:eee", "['3', 'ee']"),
+                arguments("lli2e4:abcdee", "[['2', 'abcd']]"),
+                arguments("lli2e4:abcdei3333e9:iyrrdserre", "[['2', 'abcd'], '3333', 'iyrrdserr']"),
+                arguments("lli2e4:abcdei3333e9:iyrrdserrli1e3:hjkee", "[['2', 'abcd'], '3333', 'iyrrdserr', ['1', 'hjk']]"),
+                arguments("llli3e4:someeee", "[[['3', 'some']]]"),
+                arguments("li34ee", "['34']")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("lists")
+    void decode_lists(String bencode, String expected) {
+        final var result = decode(bencode);
+
+        assertThat(result).isEqualTo(expected);
+    }
 }
