@@ -54,17 +54,14 @@ public final class Bencode {
 
     private static Result<List<String>> parseList(String bencode) {
         final var list = new ArrayList<String>();
-
-        var item = step(bencode.substring(1));
-        list.add(item.parsed());
-        if (item.bencodeLeft.charAt(0) == 'e') {
-            return new Result<>(list, item.bencodeLeft());
-        }
+        var encodedValue = bencode.substring(1);
 
         do {
-            item = step(item.bencodeLeft());
+            final var item = step(encodedValue);
             list.add(item.parsed());
-        } while (item.bencodeLeft.charAt(0) != 'e');
-        return new Result<>(list, item.bencodeLeft().substring(1));
+            encodedValue = item.bencodeLeft();
+        } while (!encodedValue.startsWith("e"));
+
+        return new Result<>(list, encodedValue.substring(1));
     }
 }
