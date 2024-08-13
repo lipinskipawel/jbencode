@@ -15,10 +15,10 @@ class BencodeTest implements WithAssertions {
 
     private static Stream<Arguments> strings() {
         return Stream.of(
-                arguments("4:spam", "spam"),
-                arguments("5:hello", "hello"),
-                arguments("10:reqeb[jiow", "reqeb[jiow"),
-                arguments("3:w w", "w w")
+                arguments("4:spam", "\"spam\""),
+                arguments("5:hello", "\"hello\""),
+                arguments("10:reqeb[jiow", "\"reqeb[jiow\""),
+                arguments("3:w w", "\"w w\"")
         );
     }
 
@@ -32,9 +32,9 @@ class BencodeTest implements WithAssertions {
 
     private static Stream<Arguments> integers() {
         return Stream.of(
-                arguments("i3e", "3"),
-                arguments("i-3e", "-3"),
-                arguments("i0e", "0")
+                arguments("i3e", "\"3\""),
+                arguments("i-3e", "\"-3\""),
+                arguments("i0e", "\"0\"")
         );
     }
 

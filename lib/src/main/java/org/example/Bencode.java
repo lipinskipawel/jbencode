@@ -1,14 +1,16 @@
 package org.example;
 
+import static org.example.Json.stringToJson;
+
 public final class Bencode {
 
     public static String decode(String bencode) {
         final var type = bencode.charAt(0);
         if (type == 'i') {
-            return parseInteger(bencode);
+            return stringToJson(parseInteger(bencode));
         }
         final var splitString = bencode.split(":", 2);
-        return splitString[1];
+        return stringToJson(splitString[1]);
     }
 
     private static String parseInteger(String bencode) {
