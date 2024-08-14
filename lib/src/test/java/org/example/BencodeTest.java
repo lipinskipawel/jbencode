@@ -84,4 +84,20 @@ class BencodeTest implements WithAssertions {
 
         assertThat(result).isEqualTo(expected);
     }
+
+    private static Stream<Arguments> dictionary() {
+        return Stream.of(
+                arguments("d3:cow3:moo4:spam4:eggse", "{'cow': 'moo', 'spam': 'eggs'}"),
+                arguments("d3:abcli33e1:aee", "{'abc': ['33', 'a']}"),
+                arguments("d3:jjjlli2e4:abcdei3333e9:iyrrdserrli1e3:hjkeee", "{'jjj': [['2', 'abcd'], '3333', 'iyrrdserr', ['1', 'hjk']]}")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("dictionary")
+    void decode_dictionary(String bencode, String expected) {
+        final var result = decode(bencode);
+
+        assertThat(result).isEqualTo(expected);
+    }
 }
