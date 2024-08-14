@@ -24,17 +24,19 @@ public final class Bencode {
     private static Result step(String bencode) {
         final var type = bencode.charAt(0);
         return switch (type) {
+            case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> parseString(bencode);
             case 'i' -> parseInteger(bencode);
             case 'l' -> parseList(bencode);
             case 'd' -> parseDictionary(bencode);
-            case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
-                final var splitString = bencode.split(":", 2);
-                final var length = parseInt(splitString[0]);
-                final var string = splitString[1].substring(0, length);
-                yield new Result(stringToJson(string), splitString[1].substring(length));
-            }
             default -> throw new IllegalArgumentException("Unknown character [%s]".formatted(type));
         };
+    }
+
+    private static Result parseString(String bencode) {
+        final var splitString = bencode.split(":", 2);
+        final var length = parseInt(splitString[0]);
+        final var string = splitString[1].substring(0, length);
+        return new Result(stringToJson(string), splitString[1].substring(length));
     }
 
     private static Result parseInteger(String bencode) {
